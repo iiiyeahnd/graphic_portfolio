@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ian Bataller — Graphic Designer</title>
+<meta name="description" content="Portfolio of Ian Hendrix S. Bataller — graphic designer specializing in apparel and streetwear design.">
+
+<!-- ================================================================
+     THEME (runs before CSS/paint to avoid a flash of the wrong theme)
+     Reads the saved preference (light / dark / auto). "auto" checks the
+     visitor's OS/browser color-scheme setting.
+     ================================================================ -->
+<script>
+  (function () {
+    try {
+      var KEY = 'portfolio-theme-preference';
+      var pref = localStorage.getItem(KEY) || 'auto';
+      var resolved = pref === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : pref;
+      document.documentElement.setAttribute('data-theme', resolved);
+      document.documentElement.setAttribute('data-theme-preference', pref);
+    } catch (e) {}
+  })();
+</script>
+
+<!-- ================================================================
+     FONTS
+     ================================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="home-mode">
+<div class="sidebar" id="sidebar">
+
+  <!-- Collapsed trigger: slim strip on desktop, floating round button on mobile -->
+  <button class="sidebar__fab" id="sidebarFab" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="sidebar__fab-mark">IB</span>
+  </button>
+
+  <div class="sidebar__panel">
+    <a href="#top" class="sidebar__logo">IB<span>.</span></a>
+
+    <nav class="sidebar__nav" aria-label="Section navigation">
+      <a href="#work" data-nav="work"><span class="sidebar__nav-full">Work</span><span class="sidebar__nav-short">WOR</span></a>
+      <a href="#about" data-nav="about"><span class="sidebar__nav-full">About</span><span class="sidebar__nav-short">ABT</span></a>
+      <a href="#experience" data-nav="experience"><span class="sidebar__nav-full">Experience</span><span class="sidebar__nav-short">EXP</span></a>
+      <a href="#contact" data-nav="contact"><span class="sidebar__nav-full">Contact</span><span class="sidebar__nav-short">CON</span></a>
+    </nav>
+
+    <div class="sidebar__bottom">
+      <a href="#contact" class="sidebar__hire">Hire me</a>
+
+      <div class="theme-toggle" role="group" aria-label="Theme">
+        <button class="theme-toggle__btn" data-theme="dark" aria-label="Dark mode" aria-pressed="false">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M15.5 12.3A6.5 6.5 0 0 1 7.7 4.5a6.5 6.5 0 1 0 7.8 7.8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="theme-toggle__btn" data-theme="auto" aria-label="Match system theme" aria-pressed="false">
+          <span class="theme-toggle__letter">A</span>
+        </button>
+        <button class="theme-toggle__btn" data-theme="light" aria-label="Light mode" aria-pressed="false">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="3.4" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M10 2.2v2M10 15.8v2M17.8 10h-2M4.2 10h-2M15.5 4.5l-1.4 1.4M5.9 14.1l-1.4 1.4M15.5 15.5l-1.4-1.4M5.9 5.9 4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ================================================================
+       HERO — the marquee lives inside here (pinned to the bottom) so
+       it's visible immediately on the homepage without scrolling.
+       ================================================================ -->
+  <section class="hero" id="top">
+    <div class="hero__stamp">EST. 2022 — SAN JOSE DEL MONTE, PH</div>
+    <h1 class="hero__title">
+      IAN<br>
+      BATALLER
+    </h1>
+    <p class="hero__role">Graphic Designer — Apparel &amp; Streetwear</p>
+    <p class="hero__available">
+      <span class="hero__available-dot" aria-hidden="true"></span>
+      Available for design roles
+    </p>
+    <a href="#work" class="hero__scroll">See the work</a>
+
+    <!-- MARQUEE / SKILL STRIP -->
+    <div class="marquee" role="presentation">
+      <div class="marquee__track">
+        <span>PHOTOSHOP</span><span>•</span>
+        <span>ILLUSTRATOR</span><span>•</span>
+        <span>KRITA</span><span>•</span>
+        <span>SCREEN-PRINT READY FILES</span><span>•</span>
+        <span>BRAND IDENTITY</span><span>•</span>
+        <span>STREETWEAR</span><span>•</span>
+        <span>PHOTOSHOP</span><span>•</span>
+        <span>ILLUSTRATOR</span><span>•</span>
+        <span>KRITA</span><span>•</span>
+        <span>SCREEN-PRINT READY FILES</span><span>•</span>
+        <span>BRAND IDENTITY</span><span>•</span>
+        <span>STREETWEAR</span><span>•</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SELECTED WORK — now a clickable gallery. Any card with a real
+       image opens the lightbox below (dimmed background, next/prev,
+       swipe, and a thumbnail filmstrip). Empty slots show a faint
+       collage preview of the designs already in the gallery instead
+       of a blank box.
+       ================================================================ -->
+  <section class="work" id="work">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Selected Work / 01</p>
+        <h2>Apparel &amp; graphic design</h2>
+        <p class="section-head__sub">A mix of t-shirt graphics, streetwear concepts, and brand work. Click any design to view it larger.</p>
+      </div>
+
+      <div class="work__grid">
+
+        <!-- WORK CARD 1 -->
+        <article class="work-card">
+          <div class="work-card__image">
+            <!--
+              IMG-PLACEHOLDER-WORK-1
+              What to put here: your strongest t-shirt design — a clean flat-lay
+              or mockup on a plain background. Square-ish works best (approx.
+              1000x1200px, JPG or PNG, under 500KB).
+              Free mockup tools (put YOUR art on a blank shirt):
+                https://placeit.net
+                https://smartmockups.com
+                https://www.mockuptiger.com
+              Once you have the file, save it as work-1.jpg in this same
+              folder — the <img> below already points to it.
+            -->
+            <button class="work-card__trigger" type="button" aria-label="View larger">
+              <img class="work-card__img" src="work-1.jpg" alt="Short description of the design">
+            </button>
+          </div>
+          <div class="work-card__meta">
+            <h3>Project Title</h3>
+            <p class="work-card__tag">Streetwear / Screen Print</p>
+          </div>
+        </article>
+
+        <!-- WORK CARD 2 -->
+        <article class="work-card">
+          <div class="work-card__image">
+            <!--
+              IMG-PLACEHOLDER-WORK-2
+              A second t-shirt or apparel design, ideally a different style
+              (e.g. minimalist logo tee vs. an illustrated graphic tee) to
+              show range. Save as work-2.jpg.
+            -->
+            <button class="work-card__trigger" type="button" aria-label="View larger">
+              <img class="work-card__img" src="work-2.jpg" alt="Short description of the design">
+            </button>
+          </div>
+          <div class="work-card__meta">
+            <h3>Project Title</h3>
+            <p class="work-card__tag">Brand Identity</p>
+          </div>
+        </article>
+
+        <!-- WORK CARD 3 -->
+        <article class="work-card">
+          <div class="work-card__image">
+            <!--
+              IMG-PLACEHOLDER-WORK-3
+              A close-up detail shot works well here — texture, print quality,
+              or a fabric tag detail. Save as work-3.jpg.
+            -->
+            <button class="work-card__trigger" type="button" aria-label="View larger">
+              <img class="work-card__img" src="work-3.jpg" alt="Short description of the design">
+            </button>
+          </div>
+          <div class="work-card__meta">
+            <h3>Project Title</h3>
+            <p class="work-card__tag">Graphic Tee</p>
+          </div>
+        </article>
+
+        <!-- WORK CARD 4 -->
+        <article class="work-card">
+          <div class="work-card__image">
+            <!--
+              IMG-PLACEHOLDER-WORK-4
+              A "before/after" or sketch-to-final process shot does great here
+              for hiring managers who want to see your process. Save as
+              work-4.jpg.
+            -->
+            <button class="work-card__trigger" type="button" aria-label="View larger">
+              <img class="work-card__img" src="work-4.jpg" alt="Short description of the design">
+            </button>
+          </div>
+          <div class="work-card__meta">
+            <h3>Project Title</h3>
+            <p class="work-card__tag">Process / Sketch to Final</p>
+          </div>
+        </article>
+
+        <!-- WORK CARD 5 -->
+        <article class="work-card">
+          <div class="work-card__image">
+            <!--
+              IMG-PLACEHOLDER-WORK-5
+              Another apparel piece, e.g. a hoodie or jacket graphic if you
+              have one. Save as work-5.jpg, then swap this placeholder div
+              for a button + img like the cards above — it'll join the
+              gallery automatically.
+            -->
+            <div class="work-card__placeholder">
+              <div class="work-card__placeholder-collage" aria-hidden="true"></div>
+              <span>Add image</span>
+              <small>work-5.jpg · 1000×1200</small>
+            </div>
+          </div>
+          <div class="work-card__meta">
+            <h3>Project Title</h3>
+            <p class="work-card__tag">Streetwear</p>
+          </div>
+        </article>
+
+        <!-- WORK CARD 6 -->
+        <article class="work-card">
+          <div class="work-card__image">
+            <!--
+              IMG-PLACEHOLDER-WORK-6
+              Save your last/newest piece here as work-6.jpg. If you have
+              fewer than 6 pieces right now, it's fine to delete a whole
+              <article class="work-card">…</article> block instead of
+              leaving it empty — quality over quantity.
+            -->
+            <div class="work-card__placeholder">
+              <div class="work-card__placeholder-collage" aria-hidden="true"></div>
+              <span>Add image</span>
+              <small>work-6.jpg · 1000×1200</small>
+            </div>
+          </div>
+          <div class="work-card__meta">
+            <h3>Project Title</h3>
+            <p class="work-card__tag">Apparel Graphic</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ABOUT + CARE LABEL (signature element)
+       ================================================================ -->
+  <section class="about" id="about">
+    <div class="container about__grid">
+      <div class="about__text">
+        <p class="eyebrow">About / 02</p>
+        <h2>Design with a technical backbone.</h2>
+        <p>
+          I'm an IT student and graphic designer based in Bulacan, Philippines,
+          currently interning as a graphic designer for a garment company. I
+          design apparel graphics and t-shirt concepts that hold up from
+          screen to screen-print, researching trends so the work stays
+          relevant, not just nice to look at.
+        </p>
+        <p>
+          Outside of client work, I led a capstone team of developers and
+          artists through a full production cycle — which taught me to treat
+          every design as part of a larger system, not a one-off asset.
+        </p>
+      </div>
+
+      <!--
+        SIGNATURE ELEMENT: styled like a real clothing care/wash tag.
+        Edit the text inside — this doubles as your skills summary.
+      -->
+      <div class="care-label" aria-label="Skills, styled as a garment care label">
+        <div class="care-label__stitch" aria-hidden="true"></div>
+        <p class="care-label__row care-label__row--title">CONTENTS</p>
+        <p class="care-label__row">60% Adobe Photoshop &amp; Illustrator</p>
+        <p class="care-label__row">25% Krita / Digital Illustration</p>
+        <p class="care-label__row">15% Systems &amp; QA Thinking</p>
+        <div class="care-label__divider" aria-hidden="true"></div>
+        <p class="care-label__row care-label__row--title">CARE INSTRUCTIONS</p>
+        <p class="care-label__row">Handle with attention to detail.</p>
+        <p class="care-label__row">Do not iron over deadlines.</p>
+        <div class="care-label__divider" aria-hidden="true"></div>
+        <p class="care-label__row care-label__row--title">ORIGIN</p>
+        <p class="care-label__row">Bulacan, Philippines 🇵🇭</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       EXPERIENCE
+       ================================================================ -->
+  <section class="experience" id="experience">
+    <div class="container">
+      <p class="eyebrow">Experience / 03</p>
+      <ol class="timeline">
+        <li class="timeline__item">
+          <div class="timeline__date">Mar 2026 — Present</div>
+          <div class="timeline__body">
+            <h3>Graphic Design Intern</h3>
+            <p class="timeline__org">Alpha Centauri Garment Corporation, Diliman, Quezon City</p>
+            <p>Design original apparel graphics and t-shirt concepts aligned with
+               current streetwear trends, working within brand guidelines for
+               client requests and researching fashion trends to inform design
+               decisions.</p>
+          </div>
+        </li>
+        <li class="timeline__item">
+          <div class="timeline__date">2024 — 2025</div>
+          <div class="timeline__body">
+            <h3>Project Manager &amp; Lead Graphic Artist — HACKPROOF</h3>
+            <p class="timeline__org">Capstone / Thesis Project</p>
+            <p>Led a student team building a 3D cybersecurity simulation game,
+               while creating the majority of in-game assets and background
+               art and overseeing QA and documentation.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       EDUCATION + AWARDS
+       ================================================================ -->
+  <section class="edu" id="education">
+    <div class="container">
+      <p class="eyebrow">Education / 04</p>
+      <div class="edu__grid">
+        <div class="edu__item">
+          <h3>BS in Information Technology</h3>
+          <p>STI College San Jose Del Monte · 2022 — 2026</p>
+        </div>
+        <div class="edu__item">
+          <h3>Computer System Servicing</h3>
+          <p>First City Providential College · 2019 — 2021</p>
+        </div>
+        <div class="edu__item">
+          <h3>3rd Best Presenter</h3>
+          <p>Research Symposium, STI College SJDM · 2025</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CONTACT
+       ================================================================ -->
+  <section class="contact" id="contact">
+    <p class="eyebrow eyebrow--light">Contact / 05</p>
+    <h2>Let's work together.</h2>
+    <a class="contact__email" href="mailto:henry54645@gmail.com">henry54645@gmail.com</a>
+    <div class="contact__row">
+      <span>(63+) 9661-548-070</span>
+      <span>San Jose Del Monte, Bulacan, PH</span>
+    </div>
+    <div class="contact__links">
+      <!-- Replace # with your real profile URLs -->
+      <a href="#">Instagram ↗</a>
+      <a href="#">LinkedIn ↗</a>
+    </div>
+    <footer class="footer">
+      <span>© <span id="year"></span> Ian Hendrix S. Bataller</span>
+      <span>Built with HTML, CSS &amp; JS</span>
+    </footer>
+  </section>
+
+</main>
+
+<!-- ================================================================
+     GALLERY LIGHTBOX — opens when a design in Selected Work is
+     clicked. Dims the page behind it, shows the design large, and
+     lets you move through the whole gallery with the arrow buttons,
+     a swipe/drag, the keyboard, or the thumbnail strip at the bottom.
+     ================================================================ -->
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Design gallery">
+  <div class="lightbox__backdrop" data-lightbox-dismiss></div>
+
+  <div class="lightbox__content">
+    <button class="lightbox__close" id="lightboxClose" aria-label="Close gallery">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+
+    <button class="lightbox__arrow lightbox__arrow--prev" id="lightboxPrev" aria-label="Previous design">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <figure class="lightbox__stage">
+      <img class="lightbox__image" id="lightboxImage" src="" alt="">
+      <figcaption class="lightbox__caption">
+        <span class="lightbox__caption-title" id="lightboxTitle"></span>
+        <span class="lightbox__caption-tag" id="lightboxTag"></span>
+      </figcaption>
+    </figure>
+
+    <button class="lightbox__arrow lightbox__arrow--next" id="lightboxNext" aria-label="Next design">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <div class="lightbox__filmstrip" id="lightboxFilmstrip"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
