@@ -347,6 +347,7 @@ section {
   align-items: center;
   position: relative;
   overflow: hidden;
+  padding-bottom: clamp(5.5rem, 12vw, 7.5rem);
 }
 
 .hero__stamp {
@@ -424,16 +425,24 @@ section {
 
 /* ==================================================================
    MARQUEE
+   Pinned flush to the bottom edge of the hero (not part of the
+   vertically-centered content block), so it always sits exactly at
+   the edge regardless of hero content height. Motion is driven by
+   script.js with a continuous pixel-based scroll + exact-width wrap,
+   which is seamless at any screen size — no CSS keyframe involved.
    ================================================================== */
 .marquee {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: var(--tag-red);
   color: #fff;
   overflow: hidden;
   white-space: nowrap;
   padding: 0.9rem 0;
-  border-bottom: 1px solid var(--surface-strong);
+  border-top: 1px solid var(--surface-strong);
   scroll-snap-align: none;
-  flex-shrink: 0;
 }
 
 .marquee__track {
@@ -442,16 +451,7 @@ section {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
-  animation: scroll-left 30s linear infinite;
-}
-
-@keyframes scroll-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee__track { animation: none; }
+  will-change: transform;
 }
 
 /* ==================================================================
@@ -469,120 +469,143 @@ section {
 }
 
 /* ==================================================================
-   WORK GRID
+   ALBUM GRID — Apparel Design is now four self-contained albums
+   instead of one mixed grid of photos. Each album's cover is a loose
+   "stack of prints" collage (a couple of offset rectangles behind the
+   real cover photo); clicking it opens the lightbox scoped to just
+   that album.
    ================================================================== */
-.work__grid {
+.album__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--gap);
 }
 
-@media (max-width: 900px) {
-  .work__grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-  .work__grid { grid-template-columns: 1fr; }
+@media (max-width: 700px) {
+  .album__grid { grid-template-columns: 1fr; }
 }
 
-.work-card__image {
-  aspect-ratio: 4 / 5;
-  background: var(--bg-alt);
-  border: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.work-card__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Clickable thumbnail — opens the lightbox gallery */
-.work-card__trigger {
+.album__cover {
   display: block;
   width: 100%;
-  height: 100%;
+  text-align: left;
+  background: none;
+  border: none;
   padding: 0;
   margin: 0;
-  border: none;
-  background: none;
-  cursor: zoom-in;
-  position: relative;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
 }
-.work-card__trigger::after {
-  content: '';
+
+.album__stack {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin-bottom: 1.1rem;
+}
+
+.album__stack-edge {
   position: absolute;
   inset: 0;
-  background: rgba(18, 18, 18, 0);
-  transition: background 0.2s ease;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
 }
-.work-card__trigger:hover::after { background: rgba(18, 18, 18, 0.14); }
-.work-card__trigger:focus-visible { outline-offset: -3px; }
+.album__stack-edge--2 { transform: rotate(-6deg) scale(0.96); z-index: 1; }
+.album__stack-edge--1 { transform: rotate(4deg) scale(0.98); z-index: 2; }
 
-.work-card__placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  color: var(--thread);
-  border: 1px dashed var(--thread);
-  margin: -1px;
-  height: calc(100% + 2px);
-  width: calc(100% + 2px);
+.album__stack-photo {
   position: relative;
-  overflow: hidden;
-}
-.work-card__placeholder span { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; }
-.work-card__placeholder small { font-size: 0.72rem; opacity: 0.75; }
-.work-card__placeholder span,
-.work-card__placeholder small { position: relative; z-index: 1; }
-
-/* Empty slots preview the designs already in the gallery instead
-   of sitting blank. Filled in by script.js; harmless if left empty. */
-.work-card__placeholder-collage {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 2px;
-  opacity: 0.25;
-  filter: grayscale(0.5);
-}
-.work-card__placeholder-collage img {
+  z-index: 3;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-}
-.work-card__placeholder::before {
-  content: '';
-  position: absolute;
-  inset: 0;
   background: var(--bg-alt);
-  opacity: 0.55;
+  border: 1px solid var(--line);
+  transition: transform 0.25s ease;
 }
 
-.work-card__meta { padding-top: 0.9rem; }
-.work-card__meta h3 {
+.album__cover:hover .album__stack-photo { transform: rotate(-1.5deg) scale(1.015); }
+.album__cover:focus-visible .album__stack-photo { outline: 3px solid var(--tag-red); outline-offset: 2px; }
+
+.album__count {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 4;
+  background: rgba(18, 18, 18, 0.72);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+}
+
+.album__meta h3 {
   font-family: var(--font-body);
   font-weight: 600;
   text-transform: none;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   letter-spacing: 0;
+  margin-bottom: 0.4rem;
 }
-.work-card__tag {
+
+.album__desc {
+  font-size: 0.92rem;
+  opacity: 0.72;
+  max-width: 42ch;
+}
+
+/* ==================================================================
+   SKILLS
+   ================================================================== */
+.skills__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.5rem, 4vw, 2.5rem) var(--gap);
+}
+
+@media (max-width: 600px) {
+  .skills__grid { grid-template-columns: 1fr; }
+}
+
+.skill__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.skill__name {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.skill__level {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--tag-red);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-top: 0.2rem;
+  color: var(--tag-red);
+  flex-shrink: 0;
+}
+
+.skill__bar {
+  height: 6px;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.skill__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--tag-red);
+  border-radius: 999px;
 }
 
 /* ==================================================================
@@ -680,6 +703,27 @@ section {
   opacity: 0.65;
   margin-bottom: 0.6rem;
 }
+
+/* Same pill shape/hover-fill as .hero__scroll and .sidebar__hire, so
+   any external link dropped into a timeline entry reads as one family
+   of buttons across the site. */
+.timeline__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tag-red);
+  border: 1.5px solid var(--tag-red);
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.timeline__link svg { width: 14px; height: 14px; }
+.timeline__link:hover { background: var(--tag-red); color: #fff; }
 
 /* ==================================================================
    EDUCATION
@@ -951,6 +995,13 @@ body.lightbox-open { overflow: hidden; }
   min-height: 0;
 }
 
+/* Card-swipe transition: dragging follows the pointer in real time
+   (via inline transform, set by script.js); releasing past the
+   threshold hands off to these classes, which fly the old photo off
+   and slide the new one in from the opposite edge. .is-dragging kills
+   the transition so the live drag never fights the animation, and
+   .is-snapping kills it again for the one frame that repositions the
+   incoming photo off-screen before animating it back to center. */
 .lightbox__image {
   max-width: 100%;
   max-height: 62vh;
@@ -960,6 +1011,26 @@ body.lightbox-open { overflow: hidden; }
   touch-action: pan-y;
   user-select: none;
   -webkit-user-drag: none;
+  cursor: grab;
+  transform: translateX(0) rotate(0deg);
+  opacity: 1;
+  transition: transform 0.32s cubic-bezier(0.22, 0.68, 0.32, 1), opacity 0.32s ease;
+}
+
+.lightbox__image.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+.lightbox__image.is-snapping { transition: none; }
+
+.lightbox__image.is-leaving-left { transform: translateX(-130%) rotate(-8deg); opacity: 0; }
+.lightbox__image.is-leaving-right { transform: translateX(130%) rotate(8deg); opacity: 0; }
+.lightbox__image.is-entering-left { transform: translateX(-130%) rotate(-8deg); opacity: 0; }
+.lightbox__image.is-entering-right { transform: translateX(130%) rotate(8deg); opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox__image { transition: none; }
 }
 
 .lightbox__caption {

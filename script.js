@@ -155,7 +155,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const revealTargets = document.querySelectorAll(
-  '.work-card, .timeline__item, .edu__item, .about__text, .care-label'
+  '.album, .skill, .timeline__item, .edu__item, .about__text, .care-label'
 );
 
 if (prefersReducedMotion || !('IntersectionObserver' in window)) {
@@ -179,10 +179,10 @@ if (prefersReducedMotion || !('IntersectionObserver' in window)) {
 }
 
 // ============================================================
-// Work gallery (lightbox)
-// Every work-card with a real <img> (the "Add image" slots don't
-// count until a real image replaces them) joins the gallery, in
-// the order the cards appear on the page.
+// Apparel Design — album galleries
+// Each .album has its own ordered photo list inside a hidden
+// .album__slides block. Clicking an album's cover loads ONLY that
+// album's photos into the shared lightbox below — albums never mix.
 // ============================================================
 const lightbox = document.getElementById('lightbox');
 const lightboxImage = document.getElementById('lightboxImage');
@@ -193,45 +193,56 @@ const lightboxPrev = document.getElementById('lightboxPrev');
 const lightboxNext = document.getElementById('lightboxNext');
 const lightboxClose = document.getElementById('lightboxClose');
 
-const galleryTriggers = Array.from(document.querySelectorAll('.work-card__trigger'));
+const albums = Array.from(document.querySelectorAll('.album'));
+let currentAlbumSlides = [];
 let currentSlide = 0;
 let lastFocusedTrigger = null;
 
-function slideData(trigger) {
-  const img = trigger.querySelector('img');
-  const card = trigger.closest('.work-card');
-  const titleEl = card ? card.querySelector('.work-card__meta h3') : null;
-  const tagEl = card ? card.querySelector('.work-card__tag') : null;
+function getAlbumSlides(albumEl) {
+  return Array.from(albumEl.querySelectorAll('.album__slides img'));
+}
+
+function slideData(imgEl) {
   return {
-    src: img ? img.currentSrc || img.src : '',
-    alt: img ? img.alt : '',
-    title: titleEl ? titleEl.textContent.trim() : '',
-    tag: tagEl ? tagEl.textContent.trim() : '',
+    src: imgEl.currentSrc || imgEl.src,
+    alt: imgEl.alt || '',
+    title: imgEl.dataset.title || '',
+    tag: imgEl.dataset.tag || '',
   };
 }
 
-function buildFilmstrip() {
+function buildFilmstrip(slides) {
   if (!lightboxFilmstrip) return;
   lightboxFilmstrip.innerHTML = '';
-  galleryTriggers.forEach((trigger, index) => {
-    const data = slideData(trigger);
+  slides.forEach((imgEl, index) => {
+    const data = slideData(imgEl);
     const thumb = document.createElement('button');
     thumb.type = 'button';
     thumb.className = 'lightbox__thumb';
-    thumb.setAttribute('aria-label', data.title ? `View ${data.title}` : `View design ${index + 1}`);
+    thumb.setAttribute('aria-label', data.title ? `View ${data.title}` : `View photo ${index + 1}`);
     const thumbImg = document.createElement('img');
     thumbImg.src = data.src;
     thumbImg.alt = '';
     thumb.appendChild(thumbImg);
-    thumb.addEventListener('click', () => showSlide(index));
+    thumb.addEventListener('click', () => {
+      if (index === currentSlide) return;
+      // Pick the shorter direction around the loop so the card flies
+      // the way you'd expect even when jumping across the filmstrip.
+      const forward = (index - currentSlide + currentAlbumSlides.length) % currentAlbumSlides.length;
+      const backward = (currentSlide - index + currentAlbumSlides.length) % currentAlbumSlides.length;
+      navigate(forward <= backward ? 'next' : 'prev', index);
+    });
     lightboxFilmstrip.appendChild(thumb);
   });
 }
 
-function showSlide(index) {
-  if (!galleryTriggers.length) return;
-  currentSlide = (index + galleryTriggers.length) % galleryTriggers.length;
-  const data = slideData(galleryTriggers[currentSlide]);
+// Swaps the photo/caption/filmstrip state only — no animation. Used
+// for the very first photo in an album (nothing to transition from)
+// and as the mid-transition content swap inside navigate() below.
+function renderSlide(index) {
+  if (!currentAlbumSlides.length) return;
+  currentSlide = (index + currentAlbumSlides.length) % currentAlbumSlides.length;
+  const data = slideData(currentAlbumSlides[currentSlide]);
 
   lightboxImage.src = data.src;
   lightboxImage.alt = data.alt;
@@ -246,16 +257,61 @@ function showSlide(index) {
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
   }
 
-  const multiple = galleryTriggers.length > 1;
+  const multiple = currentAlbumSlides.length > 1;
   lightboxPrev.hidden = !multiple;
   lightboxNext.hidden = !multiple;
 }
 
-function openLightbox(index, triggerEl) {
-  if (!galleryTriggers.length) return;
+// Card-swipe transition: flies the current photo off in `direction`,
+// swaps in the new one once it's off-screen, then slides it in from
+// the opposite edge. `targetIndex` lets the filmstrip jump straight
+// to a specific photo while still picking the right fly direction.
+const prefersReducedMotionLB = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let isAnimating = false;
+
+function navigate(direction, targetIndex) {
+  if (!currentAlbumSlides.length) return;
+  const nextIndex = targetIndex !== undefined
+    ? targetIndex
+    : currentSlide + (direction === 'prev' ? -1 : 1);
+
+  if (prefersReducedMotionLB || isAnimating || currentAlbumSlides.length < 2) {
+    renderSlide(nextIndex);
+    return;
+  }
+
+  isAnimating = true;
+  const exitClass = direction === 'prev' ? 'is-leaving-right' : 'is-leaving-left';
+  const enterClass = direction === 'prev' ? 'is-entering-left' : 'is-entering-right';
+
+  lightboxImage.classList.remove('is-dragging');
+  lightboxImage.classList.add(exitClass);
+
+  const finish = () => {
+    lightboxImage.removeEventListener('transitionend', finish);
+    renderSlide(nextIndex);
+    // Place the new photo off-screen on the entering side (no
+    // transition), then release it on the next frame so it animates
+    // back to center — the "slide in" half of the swap.
+    lightboxImage.classList.remove(exitClass);
+    lightboxImage.classList.add('is-snapping', enterClass);
+    void lightboxImage.offsetWidth; // force a reflow so the off-screen position is committed
+    lightboxImage.classList.remove('is-snapping', enterClass);
+    isAnimating = false;
+  };
+
+  lightboxImage.addEventListener('transitionend', finish, { once: true });
+  // Safety net in case transitionend never fires for some reason.
+  window.setTimeout(() => { if (isAnimating) finish(); }, 420);
+}
+
+function openAlbum(albumEl, triggerEl) {
+  const slides = getAlbumSlides(albumEl);
+  if (!slides.length) return;
+  currentAlbumSlides = slides;
   lastFocusedTrigger = triggerEl || null;
-  buildFilmstrip();
-  showSlide(index);
+  buildFilmstrip(currentAlbumSlides);
+  renderSlide(0);
   lightbox.classList.add('is-open');
   lightbox.setAttribute('aria-hidden', 'false');
   document.body.classList.add('lightbox-open');
@@ -269,12 +325,22 @@ function closeLightbox() {
   if (lastFocusedTrigger) lastFocusedTrigger.focus();
 }
 
-galleryTriggers.forEach((trigger, index) => {
-  trigger.addEventListener('click', () => openLightbox(index, trigger));
+albums.forEach((albumEl) => {
+  const cover = albumEl.querySelector('.album__cover');
+  if (!cover) return;
+  cover.addEventListener('click', () => openAlbum(albumEl, cover));
+
+  // Keep each album's "N Photos" badge accurate automatically —
+  // it counts whatever real <img> tags are inside .album__slides.
+  const countEl = albumEl.querySelector('.album__count');
+  if (countEl) {
+    const total = getAlbumSlides(albumEl).length;
+    countEl.textContent = `${total} Photo${total === 1 ? '' : 's'}`;
+  }
 });
 
-if (lightboxPrev) lightboxPrev.addEventListener('click', () => showSlide(currentSlide - 1));
-if (lightboxNext) lightboxNext.addEventListener('click', () => showSlide(currentSlide + 1));
+if (lightboxPrev) lightboxPrev.addEventListener('click', () => navigate('prev'));
+if (lightboxNext) lightboxNext.addEventListener('click', () => navigate('next'));
 if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
 
 if (lightbox) {
@@ -285,44 +351,122 @@ if (lightbox) {
   document.addEventListener('keydown', (e) => {
     if (!lightbox.classList.contains('is-open')) return;
     if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') showSlide(currentSlide + 1);
-    if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+    if (e.key === 'ArrowRight') navigate('next');
+    if (e.key === 'ArrowLeft') navigate('prev');
   });
 
-  // Swipe / drag to move between images
-  let pointerStartX = null;
+  // Card-swipe drag: the photo follows the pointer in real time while
+  // dragging (with a slight rotation, like a card being flicked off a
+  // stack); releasing past the threshold commits to a full swipe,
+  // otherwise it springs back to center.
+  const DRAG_THRESHOLD = 80;
+  let dragPointerId = null;
+  let dragStartX = 0;
+  let dragDeltaX = 0;
+
   lightboxImage.addEventListener('pointerdown', (e) => {
-    pointerStartX = e.clientX;
+    if (isAnimating || currentAlbumSlides.length < 2) return;
+    dragPointerId = e.pointerId;
+    dragStartX = e.clientX;
+    dragDeltaX = 0;
+    lightboxImage.classList.add('is-dragging');
+    lightboxImage.setPointerCapture && lightboxImage.setPointerCapture(e.pointerId);
   });
-  lightboxImage.addEventListener('pointerup', (e) => {
-    if (pointerStartX === null) return;
-    const delta = e.clientX - pointerStartX;
-    if (Math.abs(delta) > 50) {
-      showSlide(currentSlide + (delta < 0 ? 1 : -1));
+
+  lightboxImage.addEventListener('pointermove', (e) => {
+    if (dragPointerId === null || e.pointerId !== dragPointerId) return;
+    dragDeltaX = e.clientX - dragStartX;
+    const rotate = dragDeltaX / 22;
+    const fade = Math.max(1 - Math.abs(dragDeltaX) / 480, 0.45);
+    lightboxImage.style.transform = `translateX(${dragDeltaX}px) rotate(${rotate}deg)`;
+    lightboxImage.style.opacity = String(fade);
+  });
+
+  function endDrag(e) {
+    if (dragPointerId === null || (e && e.pointerId !== dragPointerId)) return;
+    dragPointerId = null;
+    lightboxImage.classList.remove('is-dragging');
+    const delta = dragDeltaX;
+    dragDeltaX = 0;
+
+    // Clear the inline drag position so the next class-driven
+    // transition animates from this exact on-screen spot.
+    lightboxImage.style.transform = '';
+    lightboxImage.style.opacity = '';
+
+    if (Math.abs(delta) > DRAG_THRESHOLD) {
+      navigate(delta < 0 ? 'next' : 'prev');
     }
-    pointerStartX = null;
-  });
+  }
+
+  lightboxImage.addEventListener('pointerup', endDrag);
+  lightboxImage.addEventListener('pointercancel', endDrag);
 }
 
 // ============================================================
-// Placeholder collage — empty "Add image" slots preview the
-// designs already in the gallery instead of sitting blank.
-// Automatically picks up real images once they're added; does
-// nothing (harmlessly) if the gallery is still empty.
+// Seamless marquee
+// Driven entirely by pixel math rather than a CSS keyframe, so it
+// never "jumps" or visibly resets: the track is duplicated enough
+// times to always cover the viewport, and position wraps by exactly
+// one copy's width — a point at which the content is pixel-identical
+// to where it started, so the wrap is invisible.
 // ============================================================
-const collageTargets = document.querySelectorAll('.work-card__placeholder-collage');
-if (collageTargets.length && galleryTriggers.length) {
-  const sourceImages = galleryTriggers
-    .map((trigger) => trigger.querySelector('img'))
-    .filter(Boolean)
-    .slice(0, 4);
+function initSeamlessMarquee(marqueeEl) {
+  const track = marqueeEl.querySelector('.marquee__track');
+  if (!track) return;
 
-  collageTargets.forEach((target) => {
-    sourceImages.forEach((sourceImg) => {
-      const img = document.createElement('img');
-      img.src = sourceImg.currentSrc || sourceImg.src;
-      img.alt = '';
-      target.appendChild(img);
-    });
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const baseItems = Array.from(track.children);
+  const SPEED = 40; // pixels per second
+
+  let setWidth = 0;
+  let x = 0;
+  let rafId = null;
+  let lastTimestamp = null;
+
+  function rebuild() {
+    if (rafId) cancelAnimationFrame(rafId);
+    track.style.transform = 'translateX(0)';
+    track.innerHTML = '';
+
+    // Lay down one copy first to measure a single set's width.
+    baseItems.forEach((el) => track.appendChild(el.cloneNode(true)));
+    setWidth = track.scrollWidth;
+
+    // Keep adding copies until the track comfortably covers at least
+    // two full viewport-widths beyond one set — guarantees no gap
+    // ever appears while scrolling, at any screen size.
+    const minWidth = marqueeEl.clientWidth * 2 + setWidth;
+    let guard = 0;
+    while (track.scrollWidth < minWidth && guard < 20) {
+      baseItems.forEach((el) => track.appendChild(el.cloneNode(true)));
+      guard++;
+    }
+
+    x = 0;
+    lastTimestamp = null;
+    if (!prefersReduced) rafId = requestAnimationFrame(step);
+  }
+
+  function step(timestamp) {
+    if (lastTimestamp === null) lastTimestamp = timestamp;
+    const dt = (timestamp - lastTimestamp) / 1000;
+    lastTimestamp = timestamp;
+
+    x -= SPEED * dt;
+    if (x <= -setWidth) x += setWidth;
+
+    track.style.transform = `translateX(${x}px)`;
+    rafId = requestAnimationFrame(step);
+  }
+
+  rebuild();
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(rebuild, 200);
   });
 }
+
+document.querySelectorAll('.marquee').forEach(initSeamlessMarquee);

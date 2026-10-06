@@ -47,6 +47,7 @@
 
     <nav class="sidebar__nav" aria-label="Section navigation">
       <a href="#work" data-nav="work"><span class="sidebar__nav-full">Work</span><span class="sidebar__nav-short">WOR</span></a>
+      <a href="#skills" data-nav="skills"><span class="sidebar__nav-full">Skills</span><span class="sidebar__nav-short">SKL</span></a>
       <a href="#about" data-nav="about"><span class="sidebar__nav-full">About</span><span class="sidebar__nav-short">ABT</span></a>
       <a href="#experience" data-nav="experience"><span class="sidebar__nav-full">Experience</span><span class="sidebar__nav-short">EXP</span></a>
       <a href="#contact" data-nav="contact"><span class="sidebar__nav-full">Contact</span><span class="sidebar__nav-short">CON</span></a>
@@ -78,13 +79,14 @@
 <main>
 
   <!-- ================================================================
-       HERO — the marquee lives inside here (pinned to the bottom) so
-       it's visible immediately on the homepage without scrolling.
+       HERO — the marquee is pinned to the very bottom edge of the hero
+       (position: absolute), so it always sits flush against the edge
+       instead of floating with the rest of the centered content.
        ================================================================ -->
   <section class="hero" id="top">
     <div class="hero__stamp">EST. 2022 — SAN JOSE DEL MONTE, PH</div>
     <h1 class="hero__title">
-      IAN<br>
+      IAN HENDRIX<br>
       BATALLER
     </h1>
     <p class="hero__role">Graphic Designer — Apparel &amp; Streetwear</p>
@@ -94,15 +96,11 @@
     </p>
     <a href="#work" class="hero__scroll">See the work</a>
 
-    <!-- MARQUEE / SKILL STRIP -->
+    <!-- MARQUEE / SKILL STRIP — motion is driven entirely by script.js
+         (continuous pixel-based scroll, not a CSS keyframe loop), which
+         guarantees a seamless wrap at any screen size. -->
     <div class="marquee" role="presentation">
       <div class="marquee__track">
-        <span>PHOTOSHOP</span><span>•</span>
-        <span>ILLUSTRATOR</span><span>•</span>
-        <span>KRITA</span><span>•</span>
-        <span>SCREEN-PRINT READY FILES</span><span>•</span>
-        <span>BRAND IDENTITY</span><span>•</span>
-        <span>STREETWEAR</span><span>•</span>
         <span>PHOTOSHOP</span><span>•</span>
         <span>ILLUSTRATOR</span><span>•</span>
         <span>KRITA</span><span>•</span>
@@ -114,147 +112,204 @@
   </section>
 
   <!-- ================================================================
-       SELECTED WORK — now a clickable gallery. Any card with a real
-       image opens the lightbox below (dimmed background, next/prev,
-       swipe, and a thumbnail filmstrip). Empty slots show a faint
-       collage preview of the designs already in the gallery instead
-       of a blank box.
+       APPAREL DESIGN — four albums instead of one mixed grid. Each
+       album is its own self-contained gallery: clicking its cover opens
+       the lightbox scoped to ONLY that album's photos. Albums never mix.
        ================================================================ -->
   <section class="work" id="work">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Selected Work / 01</p>
-        <h2>Apparel &amp; graphic design</h2>
-        <p class="section-head__sub">A mix of t-shirt graphics, streetwear concepts, and brand work. Click any design to view it larger.</p>
+        <p class="eyebrow">Apparel Design / 01</p>
+        <h2>Work, by album.</h2>
+        <p class="section-head__sub">Four albums: the designs themselves, brand work, how they look on a real shirt, and the process behind them. Click an album to open it.</p>
       </div>
 
-      <div class="work__grid">
+      <div class="album__grid">
 
-        <!-- WORK CARD 1 -->
-        <article class="work-card">
-          <div class="work-card__image">
-            <!--
-              IMG-PLACEHOLDER-WORK-1
-              What to put here: your strongest t-shirt design — a clean flat-lay
-              or mockup on a plain background. Square-ish works best (approx.
-              1000x1200px, JPG or PNG, under 500KB).
-              Free mockup tools (put YOUR art on a blank shirt):
-                https://placeit.net
-                https://smartmockups.com
-                https://www.mockuptiger.com
-              Once you have the file, save it as work-1.jpg in this same
-              folder — the <img> below already points to it.
-            -->
-            <button class="work-card__trigger" type="button" aria-label="View larger">
-              <img class="work-card__img" src="work-1.jpg" alt="Short description of the design">
-            </button>
-          </div>
-          <div class="work-card__meta">
-            <h3>Project Title</h3>
-            <p class="work-card__tag">Streetwear / Screen Print</p>
-          </div>
-        </article>
-
-        <!-- WORK CARD 2 -->
-        <article class="work-card">
-          <div class="work-card__image">
-            <!--
-              IMG-PLACEHOLDER-WORK-2
-              A second t-shirt or apparel design, ideally a different style
-              (e.g. minimalist logo tee vs. an illustrated graphic tee) to
-              show range. Save as work-2.jpg.
-            -->
-            <button class="work-card__trigger" type="button" aria-label="View larger">
-              <img class="work-card__img" src="work-2.jpg" alt="Short description of the design">
-            </button>
-          </div>
-          <div class="work-card__meta">
-            <h3>Project Title</h3>
-            <p class="work-card__tag">Brand Identity</p>
-          </div>
-        </article>
-
-        <!-- WORK CARD 3 -->
-        <article class="work-card">
-          <div class="work-card__image">
-            <!--
-              IMG-PLACEHOLDER-WORK-3
-              A close-up detail shot works well here — texture, print quality,
-              or a fabric tag detail. Save as work-3.jpg.
-            -->
-            <button class="work-card__trigger" type="button" aria-label="View larger">
-              <img class="work-card__img" src="work-3.jpg" alt="Short description of the design">
-            </button>
-          </div>
-          <div class="work-card__meta">
-            <h3>Project Title</h3>
-            <p class="work-card__tag">Graphic Tee</p>
-          </div>
-        </article>
-
-        <!-- WORK CARD 4 -->
-        <article class="work-card">
-          <div class="work-card__image">
-            <!--
-              IMG-PLACEHOLDER-WORK-4
-              A "before/after" or sketch-to-final process shot does great here
-              for hiring managers who want to see your process. Save as
-              work-4.jpg.
-            -->
-            <button class="work-card__trigger" type="button" aria-label="View larger">
-              <img class="work-card__img" src="work-4.jpg" alt="Short description of the design">
-            </button>
-          </div>
-          <div class="work-card__meta">
-            <h3>Project Title</h3>
-            <p class="work-card__tag">Process / Sketch to Final</p>
-          </div>
-        </article>
-
-        <!-- WORK CARD 5 -->
-        <article class="work-card">
-          <div class="work-card__image">
-            <!--
-              IMG-PLACEHOLDER-WORK-5
-              Another apparel piece, e.g. a hoodie or jacket graphic if you
-              have one. Save as work-5.jpg, then swap this placeholder div
-              for a button + img like the cards above — it'll join the
-              gallery automatically.
-            -->
-            <div class="work-card__placeholder">
-              <div class="work-card__placeholder-collage" aria-hidden="true"></div>
-              <span>Add image</span>
-              <small>work-5.jpg · 1000×1200</small>
+        <!-- ALBUM 1 — DESIGNS: the apparel graphics themselves, as
+             standalone artwork (flats, final art). -->
+        <article class="album">
+          <button class="album__cover" type="button" aria-label="Open the Designs album">
+            <div class="album__stack" aria-hidden="true">
+              <span class="album__stack-edge album__stack-edge--2"></span>
+              <span class="album__stack-edge album__stack-edge--1"></span>
+              <!--
+                IMG-PLACEHOLDER-ALBUM-DESIGNS-COVER
+                Your strongest standalone design — flat art or a clean
+                mockup on a plain background. ~1000x1200px, JPG/PNG.
+              -->
+              <img class="album__stack-photo" src="design/design1.jpg" alt="">
             </div>
-          </div>
-          <div class="work-card__meta">
-            <h3>Project Title</h3>
-            <p class="work-card__tag">Streetwear</p>
-          </div>
-        </article>
-
-        <!-- WORK CARD 6 -->
-        <article class="work-card">
-          <div class="work-card__image">
-            <!--
-              IMG-PLACEHOLDER-WORK-6
-              Save your last/newest piece here as work-6.jpg. If you have
-              fewer than 6 pieces right now, it's fine to delete a whole
-              <article class="work-card">…</article> block instead of
-              leaving it empty — quality over quantity.
-            -->
-            <div class="work-card__placeholder">
-              <div class="work-card__placeholder-collage" aria-hidden="true"></div>
-              <span>Add image</span>
-              <small>work-6.jpg · 1000×1200</small>
+            <div class="album__meta">
+              <h3>Designs</h3>
+              <p class="album__desc">The graphics themselves — standalone artwork before they ever touch fabric.</p>
+              <span class="album__count">Photos</span>
             </div>
-          </div>
-          <div class="work-card__meta">
-            <h3>Project Title</h3>
-            <p class="work-card__tag">Apparel Graphic</p>
+          </button>
+
+          <!--
+            Hidden data source — every photo in THIS album, in order.
+            To add more photos to this album: copy the <img> line below,
+            point it at a new real file (e.g. designs-2.jpg), and give it
+            its own alt text, data-title and data-tag. Nothing else to
+            change — the count badge and gallery pick it up automatically.
+          -->
+          <div class="album__slides" hidden>
+            <img src="design/design1.jpg" alt="Streetwear graphic design" data-title="Coastal High" data-tag="Streetwear / Screen Print">
+            <img src="design/design2.png" alt="Streetwear graphic design" data-title="The Skull" data-tag="Streetwear / Screen Print">
+            <img src="design/design3.png" alt="Streetwear graphic design" data-title="Crossed Faith" data-tag="Streetwear / Screen Print">
           </div>
         </article>
 
+        <!-- ALBUM 2 — BRANDS: logo and brand identity work. -->
+        <article class="album">
+          <button class="album__cover" type="button" aria-label="Open the Brands album">
+            <div class="album__stack" aria-hidden="true">
+              <span class="album__stack-edge album__stack-edge--2"></span>
+              <span class="album__stack-edge album__stack-edge--1"></span>
+              <!--
+                IMG-PLACEHOLDER-ALBUM-BRANDS-COVER
+                A logo, wordmark, or brand system piece. ~1000x1200px.
+              -->
+              <img class="album__stack-photo" src="brandID/brand1.jpg" alt="">
+            </div>
+            <div class="album__meta">
+              <h3>Brands</h3>
+              <p class="album__desc">Logo and brand identity work for apparel labels and small businesses.</p>
+              <span class="album__count">Photos</span>
+            </div>
+          </button>
+
+          <!-- Add more photos the same way as Album 1 above. -->
+          <div class="album__slides" hidden>
+            <img src="brandID/brand1.jpg" alt="Brand identity design" data-title="Coastal High Brand Identity" data-tag="Brand Identity">
+          </div>
+        </article>
+
+        <!-- ALBUM 3 — GRAPHIC TEE: the designs mocked up. -->
+        <article class="album">
+          <button class="album__cover" type="button" aria-label="Open the Graphic Tee album">
+            <div class="album__stack" aria-hidden="true">
+              <span class="album__stack-edge album__stack-edge--2"></span>
+              <span class="album__stack-edge album__stack-edge--1"></span>
+              <!--
+                IMG-PLACEHOLDER-ALBUM-TEE-COVER
+                A t-shirt mockup showing a design worn/printed on a real
+                (or rendered) shirt. Free mockup tools:
+                  https://placeit.net
+                  https://smartmockups.com
+                  https://www.mockuptiger.com
+              -->
+              <img class="album__stack-photo" src="mockup/mockup1.jpg" alt="">
+            </div>
+            <div class="album__meta">
+              <h3>Graphic Tee</h3>
+              <p class="album__desc">The same designs mocked up — detailed representaion of how designs looks like on a shirt</p>
+              <span class="album__count">Photos</span>
+            </div>
+          </button>
+
+          <!-- Add more photos the same way as Album 1 above. -->
+          <div class="album__slides" hidden>
+            <img src="mockup/mockup1.jpg" alt="Graphic tee mockup" data-title="Coastal High Mockup" data-tag="Graphic Tee">
+          </div>
+        </article>
+
+        <!-- ALBUM 4 — PROCESS: how the designs are made (sketches,
+             Illustrator color separation, print-ready breakdowns). -->
+        <article class="album">
+          <button class="album__cover" type="button" aria-label="Open the Process album">
+            <div class="album__stack" aria-hidden="true">
+              <span class="album__stack-edge album__stack-edge--2"></span>
+              <span class="album__stack-edge album__stack-edge--1"></span>
+              <!--
+                IMG-PLACEHOLDER-ALBUM-PROCESS-COVER
+                A sketch-to-final comparison, or a color-separation
+                breakdown from Illustrator showing each print layer.
+              -->
+              <img class="album__stack-photo" src="sketch/sketch1.png" alt="">
+            </div>
+            <div class="album__meta">
+              <h3>Process</h3>
+              <p class="album__desc">Behind the art — sketches, color separations, and print-ready breakdowns.</p>
+              <span class="album__count">Photos</span>
+            </div>
+          </button>
+
+          <!-- Add more photos the same way as Album 1 above. -->
+          <div class="album__slides" hidden>
+            <img src="sketch/sketch1.png" alt="Design process and color separation" data-title="Project Title" data-tag="Process / Sketch to Final">
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SKILLS — Graphic design skills, kept separate from the Apparel
+       Design gallery and from the About bio.
+       ================================================================ -->
+  <section class="skills" id="skills">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Skills / 02</p>
+        <h2>Tools of the trade.</h2>
+        <p class="section-head__sub">Software and design skills used day to day, from first sketch to print-ready file.</p>
+      </div>
+
+      <!--
+        Edit the label, level text, and the inline width % on each
+        .skill__bar-fill to match your own skill set.
+      -->
+      <div class="skills__grid">
+        <div class="skill">
+          <div class="skill__head">
+            <span class="skill__name">Adobe Illustrator</span>
+            <span class="skill__level">Expert</span>
+          </div>
+          <div class="skill__bar"><span class="skill__bar-fill" style="width: 95%;"></span></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__head">
+            <span class="skill__name">Adobe Photoshop</span>
+            <span class="skill__level">Expert</span>
+          </div>
+          <div class="skill__bar"><span class="skill__bar-fill" style="width: 90%;"></span></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__head">
+            <span class="skill__name">Krita / Digital Illustration</span>
+            <span class="skill__level">Advanced</span>
+          </div>
+          <div class="skill__bar"><span class="skill__bar-fill" style="width: 80%;"></span></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__head">
+            <span class="skill__name">Color Separation &amp; Print Prep</span>
+            <span class="skill__level">Advanced</span>
+          </div>
+          <div class="skill__bar"><span class="skill__bar-fill" style="width: 85%;"></span></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__head">
+            <span class="skill__name">Typography &amp; Layout</span>
+            <span class="skill__level">Advanced</span>
+          </div>
+          <div class="skill__bar"><span class="skill__bar-fill" style="width: 80%;"></span></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__head">
+            <span class="skill__name">Brand Identity</span>
+            <span class="skill__level">Advanced</span>
+          </div>
+          <div class="skill__bar"><span class="skill__bar-fill" style="width: 78%;"></span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -265,7 +320,7 @@
   <section class="about" id="about">
     <div class="container about__grid">
       <div class="about__text">
-        <p class="eyebrow">About / 02</p>
+        <p class="eyebrow">About / 03</p>
         <h2>Design with a technical backbone.</h2>
         <p>
           I'm an IT student and graphic designer based in Bulacan, Philippines,
@@ -283,14 +338,12 @@
 
       <!--
         SIGNATURE ELEMENT: styled like a real clothing care/wash tag.
-        Edit the text inside — this doubles as your skills summary.
       -->
-      <div class="care-label" aria-label="Skills, styled as a garment care label">
+      <div class="care-label" aria-label="Quick facts, styled as a garment care label">
         <div class="care-label__stitch" aria-hidden="true"></div>
-        <p class="care-label__row care-label__row--title">CONTENTS</p>
-        <p class="care-label__row">60% Adobe Photoshop &amp; Illustrator</p>
-        <p class="care-label__row">25% Krita / Digital Illustration</p>
-        <p class="care-label__row">15% Systems &amp; QA Thinking</p>
+        <p class="care-label__row care-label__row--title">MATERIAL</p>
+        <p class="care-label__row">Apparel &amp; streetwear graphics</p>
+        <p class="care-label__row">Brand identity systems</p>
         <div class="care-label__divider" aria-hidden="true"></div>
         <p class="care-label__row care-label__row--title">CARE INSTRUCTIONS</p>
         <p class="care-label__row">Handle with attention to detail.</p>
@@ -307,7 +360,7 @@
        ================================================================ -->
   <section class="experience" id="experience">
     <div class="container">
-      <p class="eyebrow">Experience / 03</p>
+      <p class="eyebrow">Experience / 04</p>
       <ol class="timeline">
         <li class="timeline__item">
           <div class="timeline__date">Mar 2026 — Present</div>
@@ -328,6 +381,11 @@
             <p>Led a student team building a 3D cybersecurity simulation game,
                while creating the majority of in-game assets and background
                art and overseeing QA and documentation.</p>
+            <!-- Replace the href if the game ever moves to a new URL. -->
+            <a class="timeline__link" href="https://hwareon.itch.io/hackproof" target="_blank" rel="noopener">
+              Play HACKPROOF
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
         </li>
       </ol>
@@ -339,7 +397,7 @@
        ================================================================ -->
   <section class="edu" id="education">
     <div class="container">
-      <p class="eyebrow">Education / 04</p>
+      <p class="eyebrow">Education / 05</p>
       <div class="edu__grid">
         <div class="edu__item">
           <h3>BS in Information Technology</h3>
@@ -361,7 +419,7 @@
        CONTACT
        ================================================================ -->
   <section class="contact" id="contact">
-    <p class="eyebrow eyebrow--light">Contact / 05</p>
+    <p class="eyebrow eyebrow--light">Contact / 06</p>
     <h2>Let's work together.</h2>
     <a class="contact__email" href="mailto:henry54645@gmail.com">henry54645@gmail.com</a>
     <div class="contact__row">
@@ -370,8 +428,8 @@
     </div>
     <div class="contact__links">
       <!-- Replace # with your real profile URLs -->
-      <a href="#">Instagram ↗</a>
-      <a href="#">LinkedIn ↗</a>
+      <a href="https://www.instagram.com/hendeerx/">Instagram ↗</a>
+      <a href="https://www.linkedin.com/in/ian-hendrix-bataller-0abb87302/">LinkedIn ↗</a>
     </div>
     <footer class="footer">
       <span>© <span id="year"></span> Ian Hendrix S. Bataller</span>
@@ -382,10 +440,10 @@
 </main>
 
 <!-- ================================================================
-     GALLERY LIGHTBOX — opens when a design in Selected Work is
-     clicked. Dims the page behind it, shows the design large, and
-     lets you move through the whole gallery with the arrow buttons,
-     a swipe/drag, the keyboard, or the thumbnail strip at the bottom.
+     GALLERY LIGHTBOX — shared by all four albums above. Opening an
+     album loads only that album's photos into this one lightbox, so
+     albums never mix. Dims the page, shows one photo at a time, and
+     supports next/prev, swipe/drag, the keyboard, and a filmstrip.
      ================================================================ -->
 <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Design gallery">
   <div class="lightbox__backdrop" data-lightbox-dismiss></div>
@@ -395,7 +453,7 @@
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
 
-    <button class="lightbox__arrow lightbox__arrow--prev" id="lightboxPrev" aria-label="Previous design">
+    <button class="lightbox__arrow lightbox__arrow--prev" id="lightboxPrev" aria-label="Previous photo">
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
 
@@ -407,7 +465,7 @@
       </figcaption>
     </figure>
 
-    <button class="lightbox__arrow lightbox__arrow--next" id="lightboxNext" aria-label="Next design">
+    <button class="lightbox__arrow lightbox__arrow--next" id="lightboxNext" aria-label="Next photo">
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
 
